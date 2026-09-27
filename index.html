@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>엄마 메뉴판</title>
+<style>
+  :root {
+    --bg: #f4ead9;
+    --paper: #fffaf0;
+    --brown-dark: #4a2f22;
+    --brown: #7b4a2f;
+    --brown-mid: #a9714a;
+    --brown-light: #d9b48f;
+    --accent: #b3592b;
+    --border: #e0c8a8;
+    --text: #3c2a1e;
+    --sub: #8a6c53;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    min-height: 100vh;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    padding: 28px 14px 60px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 26px;
+  }
+
+  header .badge {
+    font-size: 0.78rem;
+    color: var(--sub);
+    background: var(--brown-light);
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+  }
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: 1.7rem;
+    color: var(--brown-dark);
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    color: var(--sub);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .category-block {
+    margin-bottom: 26px;
+  }
+
+  .category-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--brown-dark);
+    margin: 0 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--brown-light);
+  }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .menu-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow: 0 3px 8px rgba(74, 47, 34, 0.08);
+    animation: fadeIn 0.35s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .menu-thumb {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--brown-light), var(--brown-mid));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    box-shadow: inset 0 -3px 6px rgba(74, 47, 34, 0.2);
+  }
+
+  .menu-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .menu-name {
+    font-weight: 700;
+    color: var(--brown-dark);
+    font-size: 1.02rem;
+    margin-bottom: 3px;
+    padding-right: 18px;
+  }
+
+  .menu-desc {
+    color: var(--sub);
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+
+  .menu-card .remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: var(--brown-light);
+    color: var(--brown-dark);
+    font-size: 0.75rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu-card .remove-btn:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .empty {
+    text-align: center;
+    color: var(--sub);
+    font-size: 0.85rem;
+    padding: 20px 0;
+  }
+
+  .add-section {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px 18px;
+    margin-top: 10px;
+    box-shadow: 0 6px 16px rgba(74, 47, 34, 0.1);
+  }
+
+  .add-section h2 {
+    font-size: 1rem;
+    color: var(--brown-dark);
+    margin: 0 0 14px;
+  }
+
+  .field {
+    margin-bottom: 12px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--sub);
+    margin-bottom: 5px;
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    font-size: 0.92rem;
+    font-family: inherit;
+    resize: vertical;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--brown-mid);
+  }
+
+  #addBtn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--brown));
+    color: #fff;
+    font-size: 0.98rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: -0.01em;
+    transition: transform 0.12s ease;
+  }
+
+  #addBtn:active {
+    transform: scale(0.98);
+  }
+
+  .hint {
+    text-align: center;
+    color: var(--sub);
+    font-size: 0.72rem;
+    margin-top: 10px;
+  }
+
+  @media (max-width: 380px) {
+    .menu-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="badge">우리집 밥상</span>
+      <h1>🍚 엄마 메뉴판</h1>
+      <p class="subtitle">오늘은 뭐 먹을까?</p>
+    </header>
+
+    <div id="menuContainer"></div>
+
+    <div class="add-section">
+      <h2>➕ 메뉴 추가하기</h2>
+      <div class="field">
+        <label for="nameInput">메뉴 이름</label>
+        <input id="nameInput" type="text" placeholder="예) 된장찌개" />
+      </div>
+      <div class="field">
+        <label for="categoryInput">카테고리</label>
+        <input id="categoryInput" list="categoryOptions" type="text" placeholder="예) 국물류, 구이, 요리..." />
+        <datalist id="categoryOptions"></datalist>
+      </div>
+      <div class="field">
+        <label for="descInput">설명 (선택)</label>
+        <textarea id="descInput" rows="2" placeholder="간단한 설명을 적어주세요"></textarea>
+      </div>
+      <div class="field">
+        <label for="emojiInput">이미지 (이모지 선택, 선택사항)</label>
+        <input id="emojiInput" type="text" maxlength="2" placeholder="🍚 🍖 🍤 🥘 🍛 처럼 입력해보세요" />
+      </div>
+      <button id="addBtn">메뉴판에 추가</button>
+      <p class="hint">추가한 메뉴는 이 브라우저에 저장돼요</p>
+    </div>
+  </div>
+
+<script>
+  const STORAGE_KEY = 'momMenuExtra';
+
+  const defaultMenus = [
+    { id: 'd1', category: '면류', name: '김치말이국수', desc: '시원한 김치 국물에 말아낸 국수', emoji: '🍜' },
+    { id: 'd2', category: '구이', name: '소고기 구이', desc: '', emoji: '🥩' },
+    { id: 'd3', category: '구이', name: '돼지고기 구이', desc: '', emoji: '🥓' },
+    { id: 'd4', category: '보양식', name: '누룽지백숙', desc: '구수한 누룽지와 함께 끓인 백숙', emoji: '🍲' },
+    { id: 'd5', category: '안주', name: '쏘야', desc: '소시지야채볶음', emoji: '🌭' },
+    { id: 'd6', category: '요리', name: '가지 탕수육', desc: '바삭한 가지튀김에 새콤달콤 소스', emoji: '🍆' },
+  ];
+
+  const iconMap = {
+    '면류': '🍜',
+    '구이': '🥩',
+    '보양식': '🍲',
+    '안주': '🍢',
+    '요리': '🍆',
+  };
+
+  function itemEmoji(item) {
+    return item.emoji || iconMap[item.category] || '🍽️';
+  }
+
+  const menuContainer = document.getElementById('menuContainer');
+  const nameInput = document.getElementById('nameInput');
+  const categoryInput = document.getElementById('categoryInput');
+  const descInput = document.getElementById('descInput');
+  const emojiInput = document.getElementById('emojiInput');
+  const addBtn = document.getElementById('addBtn');
+  const categoryOptions = document.getElementById('categoryOptions');
+
+  function loadCustomMenus() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveCustomMenus(list) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    } catch (e) {}
+  }
+
+  function render() {
+    const customMenus = loadCustomMenus();
+    const all = defaultMenus.concat(customMenus);
+
+    const grouped = new Map();
+    all.forEach(item => {
+      const cat = item.category || '기타';
+      if (!grouped.has(cat)) grouped.set(cat, []);
+      grouped.get(cat).push(item);
+    });
+
+    if (all.length === 0) {
+      menuContainer.innerHTML = '<div class="empty">등록된 메뉴가 없어요</div>';
+    } else {
+      menuContainer.innerHTML = '';
+      grouped.forEach((items, cat) => {
+        const block = document.createElement('div');
+        block.className = 'category-block';
+
+        const title = document.createElement('div');
+        title.className = 'category-title';
+        title.innerHTML = `<span>${iconMap[cat] || '🍽️'}</span><span>${cat}</span>`;
+        block.appendChild(title);
+
+        const grid = document.createElement('div');
+        grid.className = 'menu-grid';
+
+        items.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'menu-card';
+
+          const isCustom = String(item.id).startsWith('custom-');
+          card.innerHTML = `
+            <div class="menu-thumb">${itemEmoji(item)}</div>
+            <div class="menu-info">
+              <div class="menu-name">${escapeHtml(item.name)}</div>
+              ${item.desc ? `<div class="menu-desc">${escapeHtml(item.desc)}</div>` : ''}
+            </div>
+            ${isCustom ? '<button class="remove-btn" title="삭제">✕</button>' : ''}
+          `;
+
+          if (isCustom) {
+            card.querySelector('.remove-btn').addEventListener('click', () => {
+              const updated = loadCustomMenus().filter(m => m.id !== item.id);
+              saveCustomMenus(updated);
+              render();
+            });
+          }
+
+          grid.appendChild(card);
+        });
+
+        block.appendChild(grid);
+        menuContainer.appendChild(block);
+      });
+    }
+
+    categoryOptions.innerHTML = Array.from(grouped.keys())
+      .map(cat => `<option value="${escapeHtml(cat)}"></option>`)
+      .join('');
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function addMenu() {
+    const name = nameInput.value.trim();
+    const category = categoryInput.value.trim() || '기타';
+    const desc = descInput.value.trim();
+    const emoji = emojiInput.value.trim();
+
+    if (!name) {
+      nameInput.focus();
+      return;
+    }
+
+    const customMenus = loadCustomMenus();
+    customMenus.push({
+      id: 'custom-' + Date.now(),
+      category,
+      name,
+      desc,
+      emoji,
+    });
+    saveCustomMenus(customMenus);
+
+    nameInput.value = '';
+    categoryInput.value = '';
+    descInput.value = '';
+    emojiInput.value = '';
+    nameInput.focus();
+
+    render();
+  }
+
+  addBtn.addEventListener('click', addMenu);
+  nameInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') addMenu();
+  });
+
+  render();
+</script>
+</body>
+</html>
